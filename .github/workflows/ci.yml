@@ -9,6 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -16,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: ${{ matrix.node }}
           cache: 'npm'
 
       - name: Install dependencies (workspaces)
@@ -24,6 +28,23 @@ jobs:
 
       - name: Build all packages
         run: npm run build
+
+      - name: Upload backend dist
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-dist-node-${{ matrix.node }}
+          path: packages/backend/dist
+          if-no-files-found: ignore
+
+      - name: Upload frontend dist
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist-node-${{ matrix.node }}
+          path: |
+            packages/frontend/dist/**
+          if-no-files-found: ignore
 
   backend-lint:
     runs-on: ubuntu-latest
