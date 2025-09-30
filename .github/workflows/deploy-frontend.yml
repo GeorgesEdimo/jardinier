@@ -1,0 +1,45 @@
+name: Deploy Frontend (GitHub Pages)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+    paths:
+      - 'packages/frontend/**'
+      - '.github/workflows/deploy-frontend.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular app
+        run: npm run build --workspace=@jardinier/frontend -- --base-href /jardinier/
+
+      - name: Show dist content (debug)
+        run: |
+          echo "--- dist root ---"
+          ls -la packages/frontend/dist
+          echo "--- dist/frontend ---"
+          ls -la packages/frontend/dist/frontend || true
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: packages/frontend/dist/frontend
+          force_orphan: true
