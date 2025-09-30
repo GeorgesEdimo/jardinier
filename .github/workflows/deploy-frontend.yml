@@ -27,8 +27,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Angular app
-        run: npm run build --workspace=@jardinier/frontend -- --base-href /jardinier/
+      - name: Build Angular app (custom domain)
+        run: npm run build --workspace=@jardinier/frontend -- --base-href /
+
+      - name: Create SPA fallback (404.html)
+        run: |
+          cp packages/frontend/dist/frontend/index.html packages/frontend/dist/frontend/404.html
 
       - name: Show dist content (debug)
         run: |
@@ -37,9 +41,10 @@ jobs:
           echo "--- dist/frontend ---"
           ls -la packages/frontend/dist/frontend || true
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages (custom domain)
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: packages/frontend/dist/frontend
+          cname: jardinier.georgesedimo.com
           force_orphan: true
