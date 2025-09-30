@@ -1,37 +1,77 @@
 # Jardinier
 
-Application web de gestion de plantes d'intérieur (Angular + Nest.js) avec PWA, notifications et intégrations IA/Météo.
+[![CI](https://github.com/GeorgesEdimo/jardinier/actions/workflows/ci.yml/badge.svg)](https://github.com/GeorgesEdimo/jardinier/actions/workflows/ci.yml)
+[![Deploy Frontend](https://github.com/GeorgesEdimo/jardinier/actions/workflows/deploy-frontend.yml/badge.svg)](https://github.com/GeorgesEdimo/jardinier/actions/workflows/deploy-frontend.yml)
+[![Pages](https://img.shields.io/badge/GitHub%20Pages-Live-green)](https://georgesedimo.github.io/jardinier/)
+
+Application web de gestion de plantes (Angular + Nest.js) avec rappels, notifications et UI moderne.
 
 ## Monorepo
 
-- workspace root: `Jardinier/`
-- workspaces: `packages/*`
-  - backend: `packages/backend` (Nest.js)
-  - frontend: `packages/frontend` (Angular)
+- Racine: `Jardinier/`
+- Workspaces: `packages/*`
+  - `packages/backend` — Nest.js (API, Prisma)
+  - `packages/frontend` — Angular (SPA)
 
 ## Prérequis
 
 - Node.js >= 18
 - npm >= 9
 
-## Démarrage (après scaffolding)
+## Installation
 
-- Backend: `npm run start --workspace=@jardinier/backend`
-- Frontend: `npm run start --workspace=@jardinier/frontend`
+```
+npm install
+```
 
-## Roadmap (extrait)
+## Démarrage en développement
 
-- Auth multi-utilisateurs (JWT + rôles)
-- CRUD plantes + upload images
-- Besoins en eau (quantité, fréquence) + calendrier d'arrosage
-- Notifications push / email / SMS
-- Géolocalisation + météo locale (OpenWeatherMap ou MeteoAPI)
-- IA reconnaissance de plante et analyse de santé (provider pluggable)
-- PWA + offline
+Deux options:
 
-## Scripts racine
+- Lancer les deux en parallèle depuis la racine:
 
-- `npm run dev` lance les workspaces (quand disponibles)
-- `npm run build` build les workspaces
+```
+npm run dev
+```
 
-Voir `/packages/*` pour les détails une fois les projets générés.
+- Ou séparément:
+
+```
+# Backend (Nest)
+npm run start:backend
+
+# Frontend (Angular)
+npm run start:frontend
+```
+
+## Ports par défaut
+
+- Frontend: http://localhost:3000
+- Backend: selon configuration Nest (voir `packages/backend/`)
+
+## Fonctionnalités clés
+
+- Authentification JWT, formulaires Login/Register
+- Gestion des plantes et rappels
+- Notifications in-app, alarme plein écran avec son
+- UI responsive avec fonds d’écran personnalisés
+
+## Rappels et notifications
+
+- Création de rappel sans date: `sendAt` est fixé à « maintenant » côté backend
+- Polling auto côté frontend (toutes les 15s) et bouton « Vérifier maintenant » dans `/notifications`
+
+## Build
+
+```
+npm run build
+```
+
+## Dépannage
+
+- Port 3000 occupé: fermer le processus puis relancer `start:frontend`
+- Pas de notification: vérifier que vous êtes connecté et observer `POST /notifications/process` dans l’onglet Network
+
+## Licence
+
+MIT
