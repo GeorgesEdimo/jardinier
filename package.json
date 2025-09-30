@@ -1,0 +1,22 @@
+{
+  "name": "jardinier",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Application de gestion de plantes d'intérieur: fiches, besoins en eau, rappels et historique",
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT",
+  "scripts": {
+    "start:backend": "npm run start:dev --workspace=@jardinier/backend",
+    "start:frontend": "npm run start --workspace=@jardinier/frontend",
+    "dev": "run-p -l start:*",
+    "build": "npm --workspaces run build"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}

@@ -1,0 +1,63 @@
+@if (!isAuthRoute()) {
+  <nav style="display:flex; gap:12px; align-items:center; padding:.5rem 1rem; border-bottom:1px solid #eee;">
+    <a routerLink="/" style="font-weight:600; text-decoration:none;">Jardinier</a>
+
+    <div style="display:flex; gap:12px; margin:0 auto;">
+      <a routerLink="/plants" routerLinkActive="active">Plantes</a>
+      <a routerLink="/plants/add" routerLinkActive="active">Ajouter</a>
+      <a routerLink="/due" routerLinkActive="active">Arrosages dus</a>
+      <a routerLink="/notifications" routerLinkActive="active">Rappels</a>
+    </div>
+
+    @if (isLoggedIn()) {
+      <a routerLink="/notifications" class="notification-bell" style="position:relative; text-decoration:none; font-size:1.5rem;">
+        🔔
+        @if (unreadCount() > 0) {
+          <span class="notification-badge" style="position:absolute; top:-4px; right:-8px; background:#f44336; color:white; border-radius:10px; padding:2px 6px; font-size:0.7rem; font-weight:600; min-width:18px; text-align:center;">
+            {{ unreadCount() }}
+          </span>
+        }
+      </a>
+    }
+
+    @if (!isLoggedIn()) {
+      <a routerLink="/login" routerLinkActive="active">Se connecter</a>
+      <a routerLink="/register" routerLinkActive="active">Créer un compte</a>
+    } @else {
+      <button type="button" (click)="logout()" style="border:1px solid #ddd; padding:.35rem .75rem; background:#fff; cursor:pointer; border-radius:.35rem;">
+        Se déconnecter
+      </button>
+    }
+  </nav>
+}
+
+<router-outlet />
+
+@let currentAlarm = alarm()();
+@if (currentAlarm) {
+  <div style="position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; background: rgba(0,0,0,0.8);">
+    <div style="max-width:720px; width:92%; background:rgba(255,255,255,0.95); border-radius:20px; box-shadow:0 20px 60px rgba(0,0,0,.5); padding:2rem; text-align:center;">
+      <div style="font-size:3rem; line-height:1; margin-bottom:1rem;">🚨</div>
+      <h2 style="margin:0 0 .5rem; font-size:1.8rem; color:#1b5e20;">C'est le moment d'arroser !</h2>
+      <p style="margin:.25rem 0; font-weight:600; color:#2e7d32;">{{ currentAlarm.subject || 'Rappel Jardinier' }}</p>
+      <p style="margin:.25rem 0 1rem; color:#333;">{{ currentAlarm.message || 'Un rappel est arrivé à échéance.' }}</p>
+      @if (currentAlarm.plant) {
+        <p style="margin:0 0 1rem; color:#444;">Plante : <strong>{{ currentAlarm.plant.name }}</strong></p>
+      }
+      <button (click)="stopAlarm()" style="background:#e53935; color:#fff; border:none; padding:.9rem 1.2rem; border-radius:12px; cursor:pointer; font-weight:700;">Arrêter l'alarme</button>
+    </div>
+  </div>
+}
+
+@if (!isAuthRoute()) {
+  <footer style="margin-top:2rem; padding:2rem 1rem; border-top:1px solid #eee; background:#fafafa; color:#555;">
+    <div style="max-width:1100px; margin:0 auto; display:flex; flex-direction:column; align-items:center; gap:.5rem; text-align:center;">
+      <div style="font-weight:600; color:#1b5e20;">Jardinier</div>
+      <div style="font-size:.95rem;">Prenez soin de vos plantes, dedans comme dehors.</div>
+      <div style="font-size:.9rem; color:#777;">
+        © 2025 Georges Marcel EDIMO. Tous droits réservés. 
+        <a href="http://www.georgesedimo.com" target="_blank" rel="noopener" style="color:#1b5e20; text-decoration:none;">www.georgesedimo.com</a>
+      </div>
+    </div>
+  </footer>
+}

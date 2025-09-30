@@ -1,0 +1,110 @@
+// Prisma schema for Jardinier backend (SQLite)
+// Run after installing prisma deps: 
+//   npx prisma generate
+//   npx prisma migrate dev --name init
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  plants    Plant[]
+  notifications Notification[]
+}
+
+model Plant {
+  id             Int               @id @default(autoincrement())
+  ownerId        Int
+  name           String
+  species        String?
+  purchaseDate   DateTime?
+  notes          String?
+  images         Image[]
+  schedules      WateringSchedule[]
+  waterLogs      WaterLog[]
+  notifications  Notification[]
+  locationCity   String?
+  locationCountry String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  owner User @relation(fields: [ownerId], references: [id])
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  plantId   Int
+  url       String
+  metadata  String?
+  createdAt DateTime @default(now())
+
+  plant Plant @relation(fields: [plantId], references: [id])
+}
+
+model WateringSchedule {
+  id              Int      @id @default(autoincrement())
+  plantId         Int
+  waterQuantityMl Int      // quantité d'eau en millilitres
+  frequencyDays   Int      // fréquence d'arrosage en jours
+  nextWateringAt  DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  plant Plant @relation(fields: [plantId], references: [id])
+}
+
+model WaterLog {
+  id         Int      @id @default(autoincrement())
+  plantId    Int
+  wateredAt  DateTime @default(now())
+  quantityMl Int?
+  notes      String?
+
+  plant Plant @relation(fields: [plantId], references: [id])
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  plantId     Int?
+  channel     String   // push | email | sms | in-app
+  subject     String?
+  message     String?
+  status      String   @default("pending") // pending | sent | failed
+  sendAt      DateTime?
+  isRecurring Boolean  @default(false)
+  recurringDays Int?   // Nombre de jours entre chaque rappel (si récurrent)
+  enabled     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user  User   @relation(fields: [userId], references: [id])
+  plant Plant? @relation(fields: [plantId], references: [id])
+}
+
+model WeatherCache {
+  id        Int      @id @default(autoincrement())
+  city      String
+  country   String
+  data      String   // JSON string
+  fetchedAt DateTime @default(now())
+
+  @@unique([city, country])
+}

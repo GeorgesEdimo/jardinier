@@ -1,0 +1,158 @@
+/* You can add global styles to this file, and also import other style files */
+
+:root {
+  --green-900: #0b3d2e;
+  --green-800: #145a3f;
+  --green-700: #1b7b4f;
+  --green-600: #2e7d32;
+  --green-500: #43a047;
+  --green-400: #66bb6a;
+  --green-300: #81c784;
+  --green-200: #a5d6a7;
+  --green-100: #c8e6c9;
+  --bg: #f6fbf7;
+  --text: #0f271d;
+  --shadow: rgba(27, 123, 79, 0.1);
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: radial-gradient(1000px 400px at 10% 0%, #eaf6ee 0, transparent 60%),
+              radial-gradient(800px 300px at 90% 10%, #e3f3e8 0, transparent 70%),
+              var(--bg);
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  line-height: 1.6;
+}
+
+/* Conteneur et grilles */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Boutons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: .5rem .9rem;
+  border-radius: .5rem;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: var(--green-600);
+  border-color: var(--green-700);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--green-700);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.btn-secondary {
+  background: #fff;
+  border-color: var(--green-600);
+  color: var(--green-700);
+}
+
+.btn-secondary:hover {
+  background: var(--green-100);
+}
+
+/* Cartes */
+.card {
+  background: #fff;
+  border-radius: .75rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--shadow);
+}
+
+/* Formulaires */
+input, textarea, select {
+  width: 100%;
+  padding: .6rem .8rem;
+  border: 1px solid #ddd;
+  border-radius: .5rem;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--green-600);
+  box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.1);
+}
+
+label {
+  display: block;
+  margin-bottom: .4rem;
+  font-weight: 500;
+  color: var(--green-900);
+}
+
+/* Navbar responsive */
+nav {
+  background: #fff;
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  padding: .5rem .75rem;
+  border-radius: .35rem;
+  transition: background 0.2s ease;
+}
+
+nav a:hover, nav a.active {
+  background: var(--green-100);
+  color: var(--green-800);
+}
+
+@media (max-width: 768px) {
+  nav {
+    flex-wrap: wrap;
+    gap: 8px !important;
+  }
+  
+  .grid-2, .grid-3 {
+    grid-template-columns: 1fr;
+  }
+  
+  .container {
+    padding: 0 12px;
+  }
+}
